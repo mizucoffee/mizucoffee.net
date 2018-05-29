@@ -1,0 +1,12 @@
+[submodule "dot.mizucoffee.net"]
+	path = dot.mizucoffee.net
+	url = https://github.com/KawakawaRitsuki/dot.mizucoffee.net.git
+[submodule "PreKara-Server"]
+	path = PreKara-Server
+	url = https://github.com/PreKara/PreKara-Server/
+[submodule "Twiback"]
+	path = Twiback
+	url = https://github.com/KawakawaRitsuki/Twiback
+[submodule "status.mizucoffee.net"]
+	path = status.mizucoffee.net
+	url = https://github.com/KawakawaRitsuki/status.mizucoffee.net.git
