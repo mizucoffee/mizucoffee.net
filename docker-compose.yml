@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   reverse-proxy:
     build:
       context: ./reverse-proxy
@@ -12,13 +13,16 @@ services:
     links:
       - status
       - twiback
+      - prekara
     restart: always
+
   status:
     build:
       context: ./status
     container_name: status
     privileged: true
     restart: always
+
   twiback:
     build:
       context: ./twiback
@@ -29,6 +33,18 @@ services:
     links:
       - mongo
     restart: always
+
+  prekara:
+    build:
+      context: ./prekara
+    container_name: prekara
+    privileged: true
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    restart: always
+
   mongo:
     image: mongo
     restart: always
