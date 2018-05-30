@@ -11,10 +11,28 @@ services:
       - "443:443"
     links:
       - status
+      - twiback
+    restart: always
   status:
     build:
       context: ./status
     container_name: status
     privileged: true
-#mongo:
-#image: mongo:latest
+    restart: always
+  twiback:
+    build:
+      context: ./twiback
+    container_name: twiback
+    privileged: true
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    restart: always
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - ./mongodb:/data/db
+    ports:
+      - "27017:27017"
