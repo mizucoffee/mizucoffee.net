@@ -1,0 +1,11 @@
+version: '3'
+
+service:
+  status:
+    build:
+      context: ./status
+    container_name: status
+    privileged: true
+    
+  mongo:
+    image: mongo:latest
