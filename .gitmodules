@@ -7,6 +7,3 @@
 [submodule "Twiback"]
 	path = Twiback
 	url = https://github.com/KawakawaRitsuki/Twiback
-[submodule "status.mizucoffee.net"]
-	path = status.mizucoffee.net
-	url = https://github.com/KawakawaRitsuki/status.mizucoffee.net.git
