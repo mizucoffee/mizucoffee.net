@@ -1,11 +1,20 @@
 version: '3'
 
-service:
+services:
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+    container_name: reverse-proxy
+    privileged: true
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - status
   status:
     build:
       context: ./status
     container_name: status
     privileged: true
-    
-  mongo:
-    image: mongo:latest
+#mongo:
+#image: mongo:latest
