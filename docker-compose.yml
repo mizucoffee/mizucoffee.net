@@ -6,50 +6,49 @@ services:
     build:
       context: ./reverse-proxy
     container_name: reverse-proxy
-    privileged: true
     ports:
       - "80:80"
       - "443:443"
-    links:
-      - status
-      - twiback
-      - prekara
     restart: always
+    networks:
+      - network
 
   status:
     build:
       context: ./status
     container_name: status
-    privileged: true
     restart: always
+    networks:
+      - network
 
   twiback:
     build:
       context: ./twiback
     container_name: twiback
-    privileged: true
     depends_on:
       - mongo
-    links:
-      - mongo
     restart: always
+    networks:
+      - network
 
   prekara:
     build:
       context: ./prekara
     container_name: prekara
-    privileged: true
     depends_on:
       - mongo
-    links:
-      - mongo
     restart: always
+    networks:
+      - network
 
   mongo:
-    image: mzcf-mongo
-    container_name: mongo
+    image: mongo
+    container_name: mizucoffee-net-mongo
     restart: always
     volumes:
       - ./mongodb:/data/db
-    ports:
-      - "27017:27017"
+    networks:
+      - network
+
+networks:
+  network:
