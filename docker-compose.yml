@@ -46,7 +46,7 @@ services:
     restart: always
 
   mongo:
-    image: mongo
+    image: mzcf-mongo
     container_name: mongo
     restart: always
     volumes:
