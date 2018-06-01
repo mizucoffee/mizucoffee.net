@@ -9,6 +9,7 @@ ADD nginx.conf /etc/nginx/
 RUN apt update
 RUN apt -y install git wget curl gnupg
 RUN git clone https://github.com/KawakawaRitsuki/dot.mizucoffee.net.git /dot
+RUN git clone https://github.com/KawakawaRitsuki/aboutme.git /about
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt -y install nodejs
 
