@@ -3,7 +3,7 @@ FROM base/archlinux
 MAINTAINER mizucoffee
 ENV PORT 80
 
-RUN pacman -Syu
+RUN pacman --noconfirm -Syu
 RUN pacman --noconfirm -S nodejs yarn git
 
 RUN git clone https://github.com/dylanaraps/neofetch.git /neofetch
