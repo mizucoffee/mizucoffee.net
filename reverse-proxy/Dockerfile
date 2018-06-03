@@ -17,5 +17,9 @@ WORKDIR /dot
 RUN npm install
 RUN npx gulp
 
+WORKDIR /about
+RUN npm install
+RUN npx gulp
+
 EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
