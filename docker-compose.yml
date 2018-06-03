@@ -17,6 +17,8 @@ services:
     build:
       context: ./status
     container_name: status
+    volumes:
+      - ./mount/status:/data/status/
     restart: always
     networks:
       - network
@@ -46,7 +48,7 @@ services:
     container_name: mizucoffee-net-mongo
     restart: always
     volumes:
-      - ./mongodb:/data/db
+      - ./mount/mongodb:/data/db
     networks:
       - network
 
