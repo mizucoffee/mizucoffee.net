@@ -11,7 +11,7 @@ services:
       - "443:443"
     restart: always
     networks:
-      - network
+      - mizucoffee-net-network
 
   status:
     build:
@@ -21,7 +21,7 @@ services:
       - ./mount/status:/data/status/
     restart: always
     networks:
-      - network
+      - mizucoffee-net-network
 
   twiback:
     build:
@@ -31,7 +31,7 @@ services:
       - mongo
     restart: always
     networks:
-      - network
+      - mizucoffee-net-network
 
   prekara:
     build:
@@ -41,7 +41,7 @@ services:
       - mongo
     restart: always
     networks:
-      - network
+      - mizucoffee-net-network
 
   mongo:
     image: mongo
@@ -50,7 +50,7 @@ services:
     volumes:
       - ./mount/mongodb:/data/db
     networks:
-      - network
+      - mizucoffee-net-network
 
 networks:
-  network:
+  mizucoffee-net-network:
