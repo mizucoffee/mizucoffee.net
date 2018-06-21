@@ -52,5 +52,19 @@ services:
     networks:
       - mizucoffee-net-network
 
+  milacos:
+    build:
+      context: ./milacos
+    container_name: mizucoffee-net-milacos
+    ports:
+      - "22:22"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./mount/milacos/nginx:/etc/nginx/conf.d/
+      - ./mount/milacos/ssh:/ssh/config/
+    networks:
+      - mizucoffee-net-network
+
 networks:
   mizucoffee-net-network:
