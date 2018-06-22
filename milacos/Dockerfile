@@ -34,7 +34,5 @@ RUN set -x && \
   npm run build-css
 
 ADD nginx.conf /etc/nginx/
-ADD default.json /milacos/config
-
 
 CMD ["node", "index.js"]
