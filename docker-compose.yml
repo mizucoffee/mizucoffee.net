@@ -56,8 +56,6 @@ services:
     build:
       context: ./milacos
     container_name: mizucoffee-net-milacos
-    ports:
-      - "22:22"
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
