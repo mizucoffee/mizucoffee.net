@@ -14,7 +14,8 @@ RUN set -x && \
   wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz && \
   tar -xvf go1.10.3.linux-amd64.tar.gz && \
   mv go /usr/local && \
-  mkdir $HOME/.go
+  mkdir $HOME/.go && \
+  mkdir -p /ssh/{config,log}
 
 RUN set -x && \
   tar xvf docker-18.03.1-ce.tgz && \
@@ -22,7 +23,7 @@ RUN set -x && \
   go get -u github.com/tg123/sshpiper/sshpiperd
 
 # ADD milacos /milacos/
-ADD ssh /ssh/
+ADD start.sh /ssh/
 RUN git clone https://github.com/KawakawaRitsuki/MiLaCoS.git /milacos
 
 WORKDIR /milacos
