@@ -15,7 +15,8 @@ RUN set -x && \
   tar -xvf go1.10.3.linux-amd64.tar.gz && \
   mv go /usr/local && \
   mkdir $HOME/.go && \
-  mkdir -p /ssh/{config,log}
+  mkdir -p /ssh/log && \
+  mkdir -p /ssh/config
 
 RUN set -x && \
   tar xvf docker-18.03.1-ce.tgz && \
