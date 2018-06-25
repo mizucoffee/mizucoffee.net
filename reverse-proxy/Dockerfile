@@ -19,7 +19,7 @@ RUN npx gulp
 
 ADD conf.d /etc/nginx/conf.d/
 ADD cert /etc/nginx/
-ADD 502.html /error/
+ADD error /error/
 ADD nginx.conf /etc/nginx/
 
 EXPOSE 80 443
