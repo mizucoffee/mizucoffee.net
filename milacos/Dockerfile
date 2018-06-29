@@ -6,6 +6,7 @@ MAINTAINER mizucoffee
 #ENV GOPATH $HOME/.go
 #ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
 ENV PORT 3000
+ENV MONGO_URI 10.5.0.6
 
 RUN set -x && \
   apt update && \

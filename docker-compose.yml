@@ -11,7 +11,8 @@ services:
       - "443:443"
     restart: always
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.2
 
   status:
     build:
@@ -21,7 +22,8 @@ services:
       - ./mount/status:/data/status/
     restart: always
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.3
 
   twiback:
     build:
@@ -31,7 +33,8 @@ services:
       - mongo
     restart: always
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.4
 
   prekara:
     build:
@@ -41,7 +44,8 @@ services:
       - mongo
     restart: always
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.5
 
   mongo:
     image: mongo
@@ -50,7 +54,8 @@ services:
     volumes:
       - ./mount/mongodb:/data/db
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.6
 
   milacos:
     build:
@@ -62,7 +67,14 @@ services:
       - ./mount/milacos/nginx:/etc/nginx/conf.d/
       - ./mount/milacos/ssh:/ssh/config/
     networks:
-      - mizucoffee-net-network
+      mizucoffee-net-network:
+        ipv4_address: 10.5.0.7
 
 networks:
   mizucoffee-net-network:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 10.5.0.0/24
+         gateway: 10.5.0.1
