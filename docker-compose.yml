@@ -6,6 +6,8 @@ services:
     build:
       context: ./reverse-proxy
     container_name: reverse-proxy
+    volumes:
+      - /cert/certificates:/cert
     ports:
       - "80:80"
       - "443:443"
