@@ -1,0 +1,56 @@
+[
+  {
+    "domain":"mizucoffee.net",
+    "subdomain":[
+      {
+        "name":"about",
+        "location":"location / { root /about/build; }"
+      },
+      {
+        "name":"cinderella",
+        "location":"location / { proxy_pass http://192.168.5.52:3000/; }"
+      },
+      {
+        "name":"dot",
+        "location":"location / { root /dot/build; }"
+      },
+      {
+        "name":"twiback",
+        "location":"location / { proxy_pass http://10.5.0.4/; } location /socket.io/ {proxy_pass http://10.5.0.4/socket.io/;proxy_set_header Upgrade $http_upgrade;proxy_set_header Connection  'Upgrade';}"
+      },
+      {
+        "name":"follow-backup",
+        "location":"rewrite ^(.*)$ http://twiback.mizucoffee.net/ permanent;"
+      },
+      {
+        "name":"status",
+        "location":"location / { proxy_pass http://10.5.0.3/; }"
+      },
+      {
+        "name":"prekara",
+        "location":"location / { proxy_pass http://10.5.0.5/; }"
+      },
+      {
+        "name":"milacos",
+        "location":"location / { proxy_pass http://10.5.0.7:3000/; }"
+      },
+      {
+        "name":"www",
+        "location":"rewrite ^ https://dot.mizucoffee.net$request_uri? permanent;"
+      },
+      {
+        "name":"@",
+        "location":"rewrite ^ https://dot.mizucoffee.net$request_uri? permanent;"
+      }
+    ]
+  },
+  {
+    "domain":"mizu.coffee",
+    "subdomain":[
+      {
+        "name":"@",
+        "location":"location / { root /mizu.coffee/dest; }"
+      }
+    ]
+  }
+]
