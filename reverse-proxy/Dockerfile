@@ -22,12 +22,10 @@ WORKDIR /mizu.coffee
 RUN npm install
 RUN npx gulp
 
-# ADD conf.d /etc/nginx/conf.d/
-ADD cert /etc/nginx/
 ADD error /error/
 ADD nginx.conf /etc/nginx/
-
 ADD conf-build /conf-build
+
 WORKDIR /conf-build
 RUN npm install
 RUN node build.js
