@@ -25,11 +25,12 @@ fs.writeFileSync(`./output/milacos.conf`,`server {
 }
 
 server {
-  listen 443 ssl;
+  listen 443 ssl http2;
   server_name *.vps.mizucoffee.net;
 
   ssl_certificate      /cert/mizucoffee.net.crt;
   ssl_certificate_key  /cert/mizucoffee.net.key;
+  ssl_dhparam dhparam.pem;
   add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
 
   location / {
@@ -61,11 +62,12 @@ src.forEach(item => {
     let target = sd.name + "." + domain
     if(sd.name == "@") target = domain
     fs.writeFileSync(`./output/${target}.conf`, `server {
-  listen 443 ssl;
+  listen 443 ssl http2;
   server_name ${target};
 
   ssl_certificate      /cert/${domain}.crt;
   ssl_certificate_key  /cert/${domain}.key;
+  ssl_dhparam dhparam.pem;
   add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
 
   ${sd.location}
