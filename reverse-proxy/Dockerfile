@@ -68,15 +68,15 @@ RUN wget -O openssl.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_
   chmod 755 /var/log/nginx && \
   chown root:root /var/log/nginx
 
-
+RUN echo DUMMY
 
 RUN git clone https://github.com/KawakawaRitsuki/dot.mizucoffee.net.git /dot && \
-  git clone https://github.com/KawakawaRitsuki/aboutme.git /about && \
+  git clone https://github.com/KawakawaRitsuki/about.mizucoffee.net.git /about && \
   git clone https://github.com/KawakawaRitsuki/mizu.coffee.git /mizu.coffee
 
-RUN cd /dot && yarn && npx gulp
-RUN cd /about && yarn && npx gulp
-RUN cd /mizu.coffee && yarn && npx gulp
+RUN cd /dot && yarn install --network-timeout 1000000 && npx gulp
+RUN cd /about && yarn install --network-timeout 1000000 && npx gulp
+RUN cd /mizu.coffee && yarn install --network-timeout 1000000 && npx gulp
 
 ADD error /error/
 ADD nginx.conf /etc/nginx/
