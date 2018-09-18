@@ -1,23 +1,21 @@
-FROM node
+FROM base/archlinux
 
 MAINTAINER mizucoffee
 
-#ENV GOROOT /usr/local/go
-#ENV GOPATH $HOME/.go
-#ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
+RUN useradd www-data
+
 ENV PORT 3000
 ENV MONGO_URI 10.5.0.6
 
 RUN set -x && \
-  apt update && \
-  apt -y install git nginx docker software-properties-common && \
+  pacman --noconfirm -Syu && \
+  pacman --noconfirm -S git npm nodejs nginx-mainline docker wget && \
   wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz
 
 RUN set -x && \
   tar xvf docker-18.03.1-ce.tgz && \
   mv docker/* /usr/bin/
 
-# ADD milacos /milacos/
 RUN git clone https://github.com/KawakawaRitsuki/MiLaCoS.git /milacos
 
 WORKDIR /milacos

@@ -5,26 +5,6 @@ fs.mkdirp("./output/")
 fs.removeSync("./output/*")
 
 fs.writeFileSync(`./output/milacos.conf`,`server {
-  listen 80;
-  server_name *.vps.mizucoffee.net;
-
-  location / {
-    proxy_set_header  X-Real-IP  $remote_addr;
-    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
-    proxy_redirect off;
-    proxy_pass http://10.5.0.7/;
-  }
-
-  error_page 502 /502.html;
-  error_page 504 /504.html;
-  error_page 418 /418.html;
-
-  location ~ /40* { root /error; }
-  location ~ /50* { root /error; }
-}
-
-server {
   listen 443 ssl http2;
   server_name *.vps.mizucoffee.net;
 
@@ -40,13 +20,6 @@ server {
     proxy_redirect off;
     proxy_pass http://10.5.0.7/;
   }
-
-  error_page 502 /502.html;
-  error_page 504 /504.html;
-  error_page 418 /418.html;
-
-  location ~ /40* { root /error; }
-  location ~ /50* { root /error; }
 }`)
 
 fs.writeFileSync(`./output/http.conf`,`server {

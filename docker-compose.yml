@@ -71,6 +71,8 @@ services:
     networks:
       mizucoffee-net-network:
         ipv4_address: 10.5.0.7
+      milacos-network:
+        ipv4_address: 10.5.1.2
 
 networks:
   mizucoffee-net-network:
@@ -79,3 +81,9 @@ networks:
      driver: default
      config:
        - subnet: 10.5.0.0/24
+  milacos-network:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 10.5.1.0/24
