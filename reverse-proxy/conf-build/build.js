@@ -28,8 +28,8 @@ server {
   listen 443 ssl http2;
   server_name *.vps.mizucoffee.net;
 
-  ssl_certificate      /cert/mizucoffee.net.crt;
-  ssl_certificate_key  /cert/mizucoffee.net.key;
+  ssl_certificate      /cert/_.vps.mizucoffee.net.crt;
+  ssl_certificate_key  /cert/_.vps.mizucoffee.net.key;
   ssl_dhparam dhparam.pem;
   add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
 
