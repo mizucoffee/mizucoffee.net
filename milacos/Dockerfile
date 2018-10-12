@@ -5,7 +5,7 @@ MAINTAINER mizucoffee
 RUN useradd www-data
 
 ENV PORT 3000
-ENV MONGO_URI 10.5.0.6
+ENV MONGO_URI mongo
 
 RUN set -x && \
   pacman --noconfirm -Syu && \

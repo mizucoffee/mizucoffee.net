@@ -7,8 +7,8 @@
         "location":"location / { root /about/build; }"
       },
       {
-        "name":"cinderella",
-        "location":"location / { proxy_pass http://192.168.5.52:3000/; }"
+        "name":"circle",
+        "location":"location / { root /circle/dest; }"
       },
       {
         "name":"dot",
@@ -16,7 +16,7 @@
       },
       {
         "name":"twiback",
-        "location":"location / { proxy_pass http://10.5.0.4/; } location /socket.io/ {proxy_pass http://10.5.0.4/socket.io/;proxy_set_header Upgrade $http_upgrade;proxy_set_header Connection  'Upgrade';}"
+        "location":"location / { proxy_pass http://twiback/; } location /socket.io/ {proxy_pass http://twiback/socket.io/;proxy_set_header Upgrade $http_upgrade;proxy_set_header Connection  'Upgrade';}"
       },
       {
         "name":"follow-backup",
@@ -24,15 +24,15 @@
       },
       {
         "name":"status",
-        "location":"location / { proxy_pass http://10.5.0.3/; }"
+        "location":"location / { proxy_pass http://status/; }"
       },
       {
         "name":"prekara",
-        "location":"location / { proxy_pass http://10.5.0.5/; }"
+        "location":"location / { proxy_pass http://prekara/; }"
       },
       {
         "name":"milacos",
-        "location":"location / { proxy_pass http://10.5.0.7:3000/; }"
+        "location":"location / { proxy_pass http://milacos:3000/; }"
       },
       {
         "name":"www",
