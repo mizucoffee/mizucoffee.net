@@ -58,4 +58,3 @@ spec:
                 name: sus2image
                 port:
                   number: 80
-# SOCKET

@@ -57,4 +57,3 @@ spec:
                 name: svg2ogp
                 port:
                   number: 80
-# SOCKET

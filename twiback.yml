@@ -79,4 +79,3 @@ spec:
                 name: twiback
                 port:
                   number: 80
-# SOCKET
