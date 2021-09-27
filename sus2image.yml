@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: twiback
+  name: sus2image
 spec:
   replicas: 5
   selector:
     matchLabels:
-      role: twiback
+      role: sus2image
   template:
     metadata:
       labels:
-        role: twiback
+        role: sus2image
     spec:
       topologySpreadConstraints:
         - topologyKey: node
@@ -19,37 +19,16 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: twiback
+              app: sus2image
       containers:
-        - name: twiback
-          image: mizucoffee/twiback:v1.0
+        - name: sus2image
+          image: mizucoffee/sus2image:v1.0
           imagePullPolicy: IfNotPresent
-          env:
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: database_url
-          - name: TW_CK
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: tw_ck
-          - name: TW_CS
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: tw_cs
-          - name: CALLBACK_URL
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: callback_url
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: twiback
+  name: sus2image
 spec:
   type: ClusterIP
   ports:
@@ -58,25 +37,25 @@ spec:
       port: 80
       targetPort: 3000
   selector:
-    role: twiback
+    role: sus2image
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: twiback
+  name: sus2image
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   rules:
-    - host: twiback.mizucoffee.net
+    - host: sus2image.mizucoffee.com
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: twiback
+                name: sus2image
                 port:
                   number: 80
 # SOCKET

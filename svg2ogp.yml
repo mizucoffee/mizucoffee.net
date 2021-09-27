@@ -23,6 +23,7 @@ spec:
       containers:
         - name: svg2ogp
           image: mizucoffee/svg2ogp:v1.0
+          imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
 kind: Service
