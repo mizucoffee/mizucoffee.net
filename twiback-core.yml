@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twiback-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: twiback-core
+  template:
+    metadata:
+      labels:
+        role: twiback-core
+    spec:
+      containers:
+        - name: twiback-core
+          image: mizucoffee/twiback-core:v1.0
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: twiback-secret
+                key: database_url
+          - name: TW_CK
+            valueFrom:
+              secretKeyRef:
+                name: twiback-secret
+                key: tw_ck
+          - name: TW_CS
+            valueFrom:
+              secretKeyRef:
+                name: twiback-secret
+                key: tw_cs
+          - name: CALLBACK_URL
+            valueFrom:
+              secretKeyRef:
+                name: twiback-secret
+                key: callback_url
