@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: twiback
+  name: gtask
 spec:
   replicas: 5
   selector:
     matchLabels:
-      role: twiback
+      role: gtask
   template:
     metadata:
       labels:
-        role: twiback
+        role: gtask
     spec:
       topologySpreadConstraints:
         - topologyKey: node
@@ -19,37 +19,27 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: twiback
+              app: gtask
       containers:
-        - name: twiback
-          image: mizucoffee/twiback:v1.0
-          imagePullPolicy: IfNotPresent
+        - name: gtask
+          image: mizucoffee/gtask:v1.0
+          imagePullPolicy: Always
           env:
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
-                name: twiback-secret
+                name: gtask-secret
                 key: database_url
-          - name: TW_CK
+          - name: GOOGLE_CREDENTIALS
             valueFrom:
               secretKeyRef:
-                name: twiback-secret
-                key: tw_ck
-          - name: TW_CS
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: tw_cs
-          - name: CALLBACK_URL
-            valueFrom:
-              secretKeyRef:
-                name: twiback-secret
-                key: callback_url
+                name: gtask-secret
+                key: google_credentials
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: twiback
+  name: gtask
 spec:
   type: ClusterIP
   ports:
@@ -58,24 +48,23 @@ spec:
       port: 80
       targetPort: 3000
   selector:
-    role: twiback
+    role: gtask
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: twiback
+  name: gtask
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   rules:
-    - host: twiback.mizucoffee.com
+    - host: gtask.mizucoffee.com
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: twiback
+                name: gtask
                 port:
                   number: 80
