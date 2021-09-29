@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mizucoffee-net
+  namespace: default
+spec:
+  secretName: mizucoffee-net-tls
+  issuerRef:
+    name: letsencrypt-issuer
+  dnsNames:
+  - mizucoffee.net
+  - '*.mizucoffee.net'
+  - mizu.coffee
+  - '*.mizu.coffee'

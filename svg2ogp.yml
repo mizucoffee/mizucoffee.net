@@ -47,7 +47,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: svg2ogp.mizucoffee.com
+    - host: svg2ogp.mizucoffee.net
       http:
         paths:
           - pathType: Prefix
@@ -57,3 +57,7 @@ spec:
                 name: svg2ogp
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - "svg2ogp.mizucoffee.net"
+      secretName: mizucoffee-net-tls

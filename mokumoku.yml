@@ -59,7 +59,7 @@ metadata:
     nginx.ingress.kubernetes.io/affinity: "cookie"
 spec:
   rules:
-    - host: mokumoku.mizucoffee.com
+    - host: mokumoku.mizucoffee.net
       http:
         paths:
           - pathType: Prefix
@@ -69,3 +69,7 @@ spec:
                 name: mokumoku
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - "mokumoku.mizucoffee.net"
+      secretName: mizucoffee-net-tls
