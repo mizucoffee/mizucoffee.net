@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koushi-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: koushi-bot
+  template:
+    metadata:
+      labels:
+        role: koushi-bot
+    spec:
+      containers:
+        - name: koushi-bot
+          image: mizucoffee/koushi-bot:v1.0
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: SLACK_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: koushi-bot-secret
+                key: slack_api_token
