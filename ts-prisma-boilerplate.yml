@@ -22,7 +22,7 @@ spec:
               app: ts-prisma-boilerplate
       containers:
         - name: ts-prisma-boilerplate
-          image: mizucoffee/ts-prisma-boilerplate:v1.0
+          image: mizucoffee/ts-prisma-boilerplate:v1.1
           imagePullPolicy: Always
           env:
           - name: DATABASE_URL
