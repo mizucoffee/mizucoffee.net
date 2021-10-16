@@ -10,5 +10,7 @@ spec:
   dnsNames:
   - mizucoffee.net
   - '*.mizucoffee.net'
+  - mizucoffee.com
+  - '*.mizucoffee.com'
   - mizu.coffee
   - '*.mizu.coffee'
