@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mizu-coffee
+  name: dot-mizucoffee-net
 spec:
   replicas: 5
   selector:
     matchLabels:
-      role: mizu-coffee
+      role: dot-mizucoffee-net
   template:
     metadata:
       labels:
-        role: mizu-coffee
+        role: dot-mizucoffee-net
     spec:
       topologySpreadConstraints:
         - topologyKey: node
@@ -19,14 +19,14 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: mizu-coffee
+              app: dot-mizucoffee-net
       containers:
-        - name: mizu-coffee
+        - name: dot-mizucoffee-net
           image: mizucoffee/static_serve:v1.0-node16
           imagePullPolicy: Always
           env:
           - name: GITHUB_REPO
-            value: https://github.com/mizucoffee/mizu.coffee
+            value: https://github.com/mizucoffee/dot.mizucoffee.net
           - name: PUBLISH_DIR
             value: dest
           - name: BUILD_CMD
@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mizu-coffee
+  name: dot-mizucoffee-net
 spec:
   type: ClusterIP
   ports:
@@ -44,23 +44,23 @@ spec:
       port: 80
       targetPort: 80
   selector:
-    role: mizu-coffee
+    role: dot-mizucoffee-net
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mizu-coffee
+  name: dot-mizucoffee-net
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: mizu.coffee
+    - host: dot.mizucoffee.net
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: mizu-coffee
+                name: dot-mizucoffee-net
                 port:
                   number: 80
