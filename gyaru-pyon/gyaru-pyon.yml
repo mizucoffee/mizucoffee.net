@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gyaru-pyon
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      role: gyaru-pyon
+  template:
+    metadata:
+      labels:
+        role: gyaru-pyon
+    spec:
+      topologySpreadConstraints:
+        - topologyKey: node
+          maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: gyaru-pyon
+      containers:
+        - name: gyaru-pyon
+          image: mizucoffee/gyaru-pyon:v1.0
+          imagePullPolicy: Always
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: database_url
+          - name: WATSON_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: watson_api_key
+          - name: WATSON_TONE_ANALYZER_URL
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: watson_tone_analyzer_url
+          - name: DEEPL_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: deepl_token
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: session_secret
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: jwt_secret
+          - name: AITALK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: aitalk_username
+          - name: AITALK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: gyaru-pyon-secret
+                key: aitalk_password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gyaru-pyon
+spec:
+  type: ClusterIP
+  ports:
+    - name: "express-port"
+      protocol: "TCP"
+      port: 80
+      targetPort: 3000
+  selector:
+    role: gyaru-pyon
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gyaru-pyon
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: gyaru-pyon.mizucoffee.net
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: gyaru-pyon
+                port:
+                  number: 80
