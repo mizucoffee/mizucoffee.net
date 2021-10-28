@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: sus2image
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: sus2image
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: sus2image
+              role: sus2image
       containers:
         - name: sus2image
           image: mizucoffee/sus2image:v1.0
@@ -28,21 +28,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sus2image
+  name: sus2image-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: sus2image
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sus2image
+  name: sus2image-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -55,10 +54,6 @@ spec:
             path: /
             backend:
               service:
-                name: sus2image
+                name: sus2image-svc
                 port:
-                  number: 80
-  tls:
-    - hosts:
-      - "sus2image.mizucoffee.net"
-      secretName: mizucoffee-net-tls
+                  number: 3000

@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: svg2ogp
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: svg2ogp
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: svg2ogp
+              role: svg2ogp
       containers:
         - name: svg2ogp
           image: mizucoffee/svg2ogp:v1.0
@@ -28,21 +28,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: svg2ogp
+  name: svg2ogp-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: svg2ogp
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: svg2ogp
+  name: svg2ogp-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -54,10 +53,6 @@ spec:
             path: /
             backend:
               service:
-                name: svg2ogp
+                name: svg2ogp-svc
                 port:
-                  number: 80
-  tls:
-    - hosts:
-      - "svg2ogp.mizucoffee.net"
-      secretName: mizucoffee-net-tls
+                  number: 3000

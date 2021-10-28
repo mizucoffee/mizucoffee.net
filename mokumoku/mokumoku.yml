@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: mokumoku
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: mokumoku
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: mokumoku
+              role: mokumoku
       containers:
         - name: mokumoku
           image: mizucoffee/mokumoku:v1.0
@@ -39,21 +39,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mokumoku
+  name: mokumoku-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: mokumoku
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mokumoku
+  name: mokumoku-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -66,10 +65,6 @@ spec:
             path: /
             backend:
               service:
-                name: mokumoku
+                name: mokumoku-svc
                 port:
-                  number: 80
-  tls:
-    - hosts:
-      - "mokumoku.mizucoffee.net"
-      secretName: mizucoffee-net-tls
+                  number: 3000

@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: mizu-coffee
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: mizu-coffee
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: mizu-coffee
+              role: mizu-coffee
       containers:
         - name: mizu-coffee
           image: mizucoffee/static_serve:v1.0-node16
@@ -35,21 +35,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mizu-coffee
+  name: mizu-coffee-svc
 spec:
   type: ClusterIP
   ports:
     - name: "nginx-port"
       protocol: "TCP"
       port: 80
-      targetPort: 80
   selector:
     role: mizu-coffee
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mizu-coffee
+  name: mizu-coffee-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -61,6 +60,6 @@ spec:
             path: /
             backend:
               service:
-                name: mizu-coffee
+                name: mizu-coffee-svc
                 port:
                   number: 80

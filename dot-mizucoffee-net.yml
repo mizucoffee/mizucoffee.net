@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: dot-mizucoffee-net
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: dot-mizucoffee-net
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: dot-mizucoffee-net
+              role: dot-mizucoffee-net
       containers:
         - name: dot-mizucoffee-net
           image: mizucoffee/static_serve:v1.0-node16
@@ -28,28 +28,27 @@ spec:
           - name: GITHUB_REPO
             value: https://github.com/mizucoffee/dot.mizucoffee.net
           - name: PUBLISH_DIR
-            value: dest
+            value: build
           - name: BUILD_CMD
             value: npm i; npm run build
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: dot-mizucoffee-net
+  name: dot-mizucoffee-net-svc
 spec:
   type: ClusterIP
   ports:
     - name: "nginx-port"
       protocol: "TCP"
       port: 80
-      targetPort: 80
   selector:
     role: dot-mizucoffee-net
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: dot-mizucoffee-net
+  name: dot-mizucoffee-net-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -61,6 +60,6 @@ spec:
             path: /
             backend:
               service:
-                name: dot-mizucoffee-net
+                name: dot-mizucoffee-net-svc
                 port:
                   number: 80

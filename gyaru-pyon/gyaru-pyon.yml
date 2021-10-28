@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: gyaru-pyon
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: gyaru-pyon
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: gyaru-pyon
+              role: gyaru-pyon
       containers:
         - name: gyaru-pyon
           image: mizucoffee/gyaru-pyon:v1.0
@@ -69,21 +69,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gyaru-pyon
+  name: gyaru-pyon-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: gyaru-pyon
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gyaru-pyon
+  name: gyaru-pyon-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -95,6 +94,6 @@ spec:
             path: /
             backend:
               service:
-                name: gyaru-pyon
+                name: gyaru-pyon-svc
                 port:
-                  number: 80
+                  number: 3000

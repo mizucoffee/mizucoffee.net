@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: keshigo
 spec:
-  replicas: 1
+  replicas: 6
   selector:
     matchLabels:
       role: keshigo
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: keshigo
+              role: keshigo
       containers:
         - name: keshigo
           image: mizucoffee/keshigo:v1.0
@@ -34,21 +34,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: keshigo
+  name: keshigo-svc
 spec:
   type: ClusterIP
   ports:
     - name: "sinatra-port"
       protocol: "TCP"
       port: 4567
-      targetPort: 4567
   selector:
     role: keshigo
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: keshigo
+  name: keshigo-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
@@ -64,6 +63,6 @@ spec:
             path: /
             backend:
               service:
-                name: keshigo
+                name: keshigo-svc
                 port:
                   number: 4567

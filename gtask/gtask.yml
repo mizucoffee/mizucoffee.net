@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: gtask
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: gtask
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: gtask
+              role: gtask
       containers:
         - name: gtask
           image: mizucoffee/gtask:v1.0
@@ -39,21 +39,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gtask
+  name: gtask-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: gtask
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gtask
+  name: gtask-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -65,10 +64,6 @@ spec:
             path: /
             backend:
               service:
-                name: gtask
+                name: gtask-svc
                 port:
-                  number: 80
-  tls:
-    - hosts:
-      - "gtask.mizucoffee.net"
-      secretName: mizucoffee-net-tls
+                  number: 3000

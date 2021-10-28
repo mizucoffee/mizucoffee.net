@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: twiback
 spec:
-  replicas: 5
+  replicas: 6
   selector:
     matchLabels:
       role: twiback
@@ -19,7 +19,7 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: twiback
+              role: twiback
       containers:
         - name: twiback
           image: mizucoffee/twiback:v1.0
@@ -49,21 +49,20 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: twiback
+  name: twiback-svc
 spec:
   type: ClusterIP
   ports:
     - name: "express-port"
       protocol: "TCP"
-      port: 80
-      targetPort: 3000
+      port: 3000
   selector:
     role: twiback
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: twiback
+  name: twiback-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -78,6 +77,6 @@ spec:
             path: /
             backend:
               service:
-                name: twiback
+                name: twiback-svc
                 port:
-                  number: 80
+                  number: 3000
