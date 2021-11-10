@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canislupus
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      role: canislupus
+  template:
+    metadata:
+      labels:
+        role: canislupus
+    spec:
+      topologySpreadConstraints:
+        - topologyKey: node
+          maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              role: canislupus
+      containers:
+        - name: canislupus
+          image: mizucoffee/canislupus:v1.0
+          imagePullPolicy: Always
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: canislupus-secret
+                key: database_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: canislupus-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: "express-port"
+      protocol: "TCP"
+      port: 3000
+  selector:
+    role: canislupus
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: canislupus-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: canislupus.mizucoffee.net
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: canislupus-svc
+                port:
+                  number: 3000
+    - host: canislupus.mizucoffee.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: canislupus-svc
+                port:
+                  number: 3000
