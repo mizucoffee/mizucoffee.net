@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maintenance
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      role: maintenance
+  template:
+    metadata:
+      labels:
+        role: maintenance
+    spec:
+      topologySpreadConstraints:
+        - topologyKey: node
+          maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              role: maintenance
+      containers:
+        - name: maintenance
+          image: mizucoffee/static_serve:v1.0-node16
+          imagePullPolicy: Always
+          env:
+          - name: GITHUB_REPO
+            value: https://github.com/mizucoffee/maintenance.mizucoffee.net
+          - name: PUBLISH_DIR
+            value: dist
+          - name: BUILD_CMD
+            value: export REASON="データベースシステム更新";export DATE="2021年11月12日 22:00頃";npm i; npm run build
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maintenance-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: "nginx-port"
+      protocol: "TCP"
+      port: 80
+  selector:
+    role: maintenance
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: maintenance-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: "mizucoffee.net"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
+    - host: "*.mizucoffee.net"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
+    - host: "mizucoffee.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
+    - host: "*.mizucoffee.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
+    - host: "mizu.coffee"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
+
+    - host: "*.mizu.coffee"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: maintenance-svc
+                port:
+                  number: 80
