@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redmine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+  template:
+    metadata:
+      labels:
+        app: redmine
+    spec:
+      containers:
+        - image: redmine:4.2.3
+          name: redmine
+          command: ['sh', '-c']
+          args: ['git clone https://github.com/buschmais/redmics.git plugins/redmine_ics_export; bundle install --without development test --gemfile plugins/redmine_ics_export/Gemfile; cp /usr/src/config/configuration.yml /usr/src/redmine/config/configuration.yml && /docker-entrypoint.sh rails server -b 0.0.0.0']
+          env:
+            - name: REDMINE_SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-secret
+                  key: secret_key_base
+            - name: REDMINE_DB_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-secret
+                  key: db_host
+            - name: REDMINE_DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-secret
+                  key: db_name
+            - name: REDMINE_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-secret
+                  key: db_username
+            - name: REDMINE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-secret
+                  key: db_password
+          volumeMounts:
+            - name: redmine-files-persistent-storage
+              mountPath: /usr/src/redmine/files
+            - name: configuration
+              mountPath: /usr/src/config
+      volumes:
+        - name: redmine-files-persistent-storage
+          persistentVolumeClaim:
+            claimName: redmine-files-pvc
+        - name: configuration
+          configMap:
+            name: redmine-secret-files
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redmine-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: "redmine-port"
+      protocol: "TCP"
+      port: 3000
+  selector:
+    app: redmine
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: redmine-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10g"
+spec:
+  rules:
+    - host: redmine.mizucoffee.net
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: redmine-svc
+                port:
+                  number: 3000
