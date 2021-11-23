@@ -7,4 +7,4 @@ data:
   stubDomains: |
     {"l.mizucoffee.com": ["192.168.104.1"]}
   upstreamNameservers: |
-    [“8.8.8.8", “8.8.4.4"]
+    ["192.168.105.0", "8.8.8.8", '8.8.4.4"]
