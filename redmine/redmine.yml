@@ -17,7 +17,13 @@ spec:
         - image: redmine:4.2.3
           name: redmine
           command: ['sh', '-c']
-          args: ['git clone https://github.com/buschmais/redmics.git plugins/redmine_ics_export; bundle install --without development test --gemfile plugins/redmine_ics_export/Gemfile; cp /usr/src/config/configuration.yml /usr/src/redmine/config/configuration.yml && /docker-entrypoint.sh rails server -b 0.0.0.0']
+          args:
+          - |
+            git clone https://github.com/buschmais/redmics.git plugins/redmine_ics_export &&
+            gem install icalendar -v "2.5.0" &&
+            cp /usr/src/config/configuration.yml /usr/src/redmine/config/configuration.yml &&
+            git clone https://github.com/happy-se-life/kanban.git plugins/kanban &&
+            /docker-entrypoint.sh rails server -b 0.0.0.0
           env:
             - name: REDMINE_SECRET_KEY_BASE
               valueFrom:
