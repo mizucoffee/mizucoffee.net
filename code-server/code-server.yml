@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: code-server
+  template:
+    metadata:
+      labels:
+        role: code-server
+    spec:
+      topologySpreadConstraints:
+        - topologyKey: node
+          maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              role: code-server
+      containers:
+        - name: code-server
+          image: codercom/code-server:latest
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: "express-port"
+      protocol: "TCP"
+      port: 8080
+  selector:
+    role: code-server
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: code-server-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Connection "Upgrade";
+spec:
+  rules:
+    - host: code-server.mizucoffee.net
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: code-server-svc
+                port:
+                  number: 8080

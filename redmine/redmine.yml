@@ -88,6 +88,16 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "10g"
 spec:
   rules:
+    - host: redmine.mizucoffee.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: redmine-svc
+                port:
+                  number: 3000
     - host: redmine.mizucoffee.net
       http:
         paths:

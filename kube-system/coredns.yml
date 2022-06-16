@@ -4,7 +4,7 @@ metadata:
   name: coredns
   namespace: kube-system
 data:
-  stubDomains: |
-    {"l.mizucoffee.com": ["192.168.104.1"]}
+  # stubDomains: |
+  #   {"l.mizucoffee.com": ["192.168.105.0"]}
   upstreamNameservers: |
     ["192.168.105.0", "8.8.8.8", '8.8.4.4"]

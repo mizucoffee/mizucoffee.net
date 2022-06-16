@@ -5,12 +5,21 @@ metadata:
   namespace: default
 spec:
   secretName: mizucoffee-net-tls
+
+  duration: 2160h # 90d
+  renewBefore: 720h # 30d
+
   issuerRef:
     name: letsencrypt-issuer
+  privateKey:
+    rotationPolicy: Always
   dnsNames:
   - mizucoffee.net
   - '*.mizucoffee.net'
   - mizucoffee.com
   - '*.mizucoffee.com'
+  - '*.l.mizucoffee.com'
   - mizu.coffee
   - '*.mizu.coffee'
+  - mzc.fi
+  - '*.mzc.fi'

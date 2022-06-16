@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mzcfi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: mzcfi
+  template:
+    metadata:
+      labels:
+        role: mzcfi
+    spec:
+      topologySpreadConstraints:
+        - topologyKey: node
+          maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              role: mzcfi
+      containers:
+        - name: mzcfi
+          image: mizucoffee/mzc.fi:v0.1
+          imagePullPolicy: Always
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: mzcfi-secret
+                key: DATABASE_URL
+          - name: SITE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: mzcfi-secret
+                key: SITE_NAME
+          - name: DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: mzcfi-secret
+                key: DOMAIN
+          - name: SITE_DESCRIPTION
+            valueFrom:
+              secretKeyRef:
+                name: mzcfi-secret
+                key: SITE_DESCRIPTION
+      volumes:
+        - name: mzcfi-secret
+          secret:
+            secretName: mzcfi-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mzcfi-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: "nginx-port"
+      protocol: "TCP"
+      port: 3000
+  selector:
+    role: mzcfi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mzcfi-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: mzc.fi
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: mzcfi-svc
+                port:
+                  number: 3000

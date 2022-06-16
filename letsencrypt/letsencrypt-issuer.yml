@@ -12,8 +12,7 @@ spec:
       name: letsencrypt-pks
 
     solvers:
-    - selector: {}
-      dns01:
+    - dns01:
         cloudDNS:
           project: mizucoffee-net-dns
           serviceAccountSecretRef:
