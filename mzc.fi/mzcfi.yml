@@ -22,7 +22,7 @@ spec:
               role: mzcfi
       containers:
         - name: mzcfi
-          image: mizucoffee/mzc.fi:v0.1
+          image: mizucoffee/mzc.fi:v0.2
           imagePullPolicy: Always
           env:
           - name: DATABASE_URL
